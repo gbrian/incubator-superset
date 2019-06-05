@@ -50,7 +50,7 @@
     {% with filename="theme" %}
       {% include "superset/partials/_script_tag.html" %}
     {% endwith %}
-
+    
     <input
       type="hidden"
       name="csrf_token"
@@ -99,5 +99,12 @@
         {% endwith %}
       {% endif %}
     {% endblock %}
+    <!-- CustomCSS -->
+    {% for entry in global_css() %}
+      <style>
+      {{ entry }}
+      </style>
+    {% endfor %}
+    <!-- /CustomCSS -->
   </body>
 </html>

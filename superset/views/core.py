@@ -3003,8 +3003,8 @@ class CssTemplateModelView(SupersetModelView, DeleteMixin):
     add_title = _('Add CSS Template')
     edit_title = _('Edit CSS Template')
 
-    list_columns = ['template_name']
-    edit_columns = ['template_name', 'css']
+    list_columns = ['template_name', 'is_global']
+    edit_columns = ['template_name', 'css', 'is_global']
     add_columns = edit_columns
     label_columns = {
         'template_name': _('Template Name'),
@@ -3012,7 +3012,7 @@ class CssTemplateModelView(SupersetModelView, DeleteMixin):
 
 
 class CssTemplateAsyncModelView(CssTemplateModelView):
-    list_columns = ['template_name', 'css']
+    list_columns = ['template_name', 'css', 'is_global']
 
 
 appbuilder.add_separator('Sources')

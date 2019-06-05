@@ -88,6 +88,17 @@ def get_unloaded_chunks(files, loaded_chunks):
         loaded_chunks.add(f)
     return filtered_files
 
+def get_global_css():
+    from superset import db, models
+    tpls = (
+        db.session
+        .query(models.core.CssTemplate)
+        .filter_by(is_global=True)
+        .all()
+    )
+    return [css.css for css in tpls]
+
+
 
 parse_manifest_json()
 
@@ -99,6 +110,7 @@ def get_manifest():
         get_unloaded_chunks=get_unloaded_chunks,
         js_manifest=get_js_manifest_files,
         css_manifest=get_css_manifest_files,
+        global_css=get_global_css
     )
 
 

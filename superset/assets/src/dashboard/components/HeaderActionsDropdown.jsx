@@ -81,7 +81,9 @@ class HeaderActionsDropdown extends React.PureComponent {
 
     SupersetClient.get({ endpoint: '/csstemplateasyncmodelview/api/read' })
       .then(({ json }) => {
-        const cssTemplates = json.result.map(row => ({
+        const cssTemplates = json.result
+        .filter(row => !row.is_global)
+        .map(row => ({
           value: row.template_name,
           css: row.css,
           label: row.template_name,

@@ -136,6 +136,7 @@ class CssTemplate(Model, AuditMixinNullable):
     id = Column(Integer, primary_key=True)
     template_name = Column(String(250))
     css = Column(Text, default='')
+    is_global = Column(Boolean, default=False)
 
 
 slice_user = Table('slice_user', metadata,
