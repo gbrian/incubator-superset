@@ -413,6 +413,8 @@ class Dashboard(Model, AuditMixinNullable, ImportMixin):
     export_fields = ('dashboard_title', 'position_json', 'json_metadata',
                      'description', 'css', 'slug')
 
+    b64thumbnail = Column(Text)
+
     def __repr__(self):
         return self.dashboard_title or str(self.id)
 
