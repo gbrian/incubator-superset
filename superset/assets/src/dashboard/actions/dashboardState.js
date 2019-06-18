@@ -137,9 +137,11 @@ export function saveDashboardRequestSuccess() {
   };
 }
 
-export function saveDashboardRequest(data, id, saveType) {
+export function saveDashboardRequest(data, id, saveType, withToast) {
   const path = saveType === SAVE_TYPE_OVERWRITE ? 'save_dash' : 'copy_dash';
-
+  if(withToast == undefined){
+    withToast = true;
+  }
   return dispatch => {
     dispatch({ type: UPDATE_COMPONENTS_PARENTS_LIST });
 
@@ -149,7 +151,9 @@ export function saveDashboardRequest(data, id, saveType) {
     })
       .then(response => {
         dispatch(saveDashboardRequestSuccess());
-        dispatch(addSuccessToast(t('This dashboard was saved successfully.')));
+        if(withToast){
+          dispatch(addSuccessToast(t('This dashboard was saved successfully.')));
+        }
         return response;
       })
       .catch(response =>

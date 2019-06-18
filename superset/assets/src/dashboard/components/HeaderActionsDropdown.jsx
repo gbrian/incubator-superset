@@ -29,7 +29,7 @@ import injectCustomCss from '../util/injectCustomCss';
 import { SAVE_TYPE_NEWDASHBOARD } from '../util/constants';
 import URLShortLinkModal from '../../components/URLShortLinkModal';
 import getDashboardUrl from '../util/getDashboardUrl';
-import domtoimage from 'dom-to-image';
+import {downloadDashboardImage} from '../components/ImageExport';
 
 const propTypes = {
   addSuccessToast: PropTypes.func.isRequired,
@@ -109,32 +109,9 @@ class HeaderActionsDropdown extends React.PureComponent {
     this.props.startPeriodicRender(refreshInterval * 1000);
   }
 
-  downloadChartImage(ev){
-    //debugger;
-    var jtarget = $(ev.currentTarget)
-                .parents('.dashboard');
-    window.setTimeout(() => {
-      // fix transparent backgrounds
-      var bgc = jtarget.css('background-color');
-      var bgcs = [bgc].concat(
-                    jtarget.parents().map((i, el) => $(el).css('background-color')).toArray()
-                  )
-                  .filter(c => c !== "rgba(0, 0, 0, 0)");    
-      var node = jtarget.css('background-color', bgcs[0]||bgc);
-      var title = jtarget.find('.dashboard-header .editable-title input').val();
-      
-      domtoimage.toJpeg(node[0], { quality: 0.95 })
-        .then(function (dataUrl) {
-            var link = document.createElement('a');
-            link.download = title + '.jpeg';
-            link.href = dataUrl;
-            link.click();
-        })
-        .finally(function(){
-          node.css('background-color', bgc);
-        });
-      },
-      1000);
+  downloadAsImage(ev){
+    var target = $(ev.currentTarget).parents('.dashboard')[0];
+    downloadDashboardImage(target, true);
   }
 
   render() {
@@ -240,7 +217,7 @@ class HeaderActionsDropdown extends React.PureComponent {
             onChange={this.changeCss}
           />
         )}
-        {!editMode && (<MenuItem onClick={this.downloadChartImage}>
+        {!editMode && (<MenuItem onClick={this.downloadAsImage}>
             {t('Download as image')}
         </MenuItem>)}
       </DropdownButton>

@@ -81,6 +81,7 @@ function mapStateToProps({
     maxUndoHistoryExceeded: !!dashboardState.maxUndoHistoryExceeded,
     editMode: !!dashboardState.editMode,
     builderPaneType: dashboardState.builderPaneType,
+    b64thumbnail: dashboardState.b64thumbnail
   };
 }
 

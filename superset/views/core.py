@@ -65,7 +65,7 @@ from .base import (
     check_ownership,
     CsvResponse, data_payload_response, DeleteMixin, generate_download_headers,
     get_error_msg, handle_api_exception, json_error_response, json_success,
-    SupersetFilter, SupersetModelView, YamlExportMixin,
+    SupersetFilter, SupersetModelView, YamlExportMixin, SupersetModelGridView,
 )
 from .utils import (
     apply_display_max_row_limit, bootstrap_user_data, get_datasource_info, get_form_data,
@@ -617,7 +617,7 @@ class SliceAddView(SliceModelView):  # noqa
 appbuilder.add_view_no_menu(SliceAddView)
 
 
-class DashboardModelView(SupersetModelView, DeleteMixin):  # noqa
+class DashboardModelView(SupersetModelGridView, DeleteMixin):  # noqa
     route_base = '/dashboard'
     datamodel = SQLAInterface(models.Dashboard)
 
@@ -626,7 +626,7 @@ class DashboardModelView(SupersetModelView, DeleteMixin):  # noqa
     add_title = _('Add Dashboard')
     edit_title = _('Edit Dashboard')
 
-    list_columns = ['dashboard_link', 'creator', 'modified']
+    list_columns = ['b64thumbnail', 'creator', 'modified', 'id', 'dashboard_title']
     order_columns = ['modified']
     edit_columns = [
         'dashboard_title', 'slug', 'owners', 'position_json', 'css',
@@ -666,8 +666,13 @@ class DashboardModelView(SupersetModelView, DeleteMixin):  # noqa
         'css': _('CSS'),
         'json_metadata': _('JSON Metadata'),
         'table_names': _('Underlying Tables'),
+        'b64thumbnail': _('Preview'),
     }
 
+    formatters_columns = dict(
+        b64thumbnail=lambda v: Markup('<img src="%s" class="dashboard-thumbnail"/>' % (v or '/static/assets/images/empty_dashboard.png'))
+    )
+    
     def pre_add(self, obj):
         obj.slug = obj.slug or None
         if obj.slug:
@@ -726,13 +731,14 @@ class DashboardModelViewAsync(DashboardModelView):  # noqa
     route_base = '/dashboardasync'
     list_columns = [
         'id', 'dashboard_link', 'creator', 'modified', 'dashboard_title',
-        'changed_on', 'url', 'changed_by_name',
+        'changed_on', 'url', 'changed_by_name', 'b64thumbnail'
     ]
     label_columns = {
         'dashboard_link': _('Dashboard'),
         'dashboard_title': _('Title'),
         'creator': _('Creator'),
         'modified': _('Modified'),
+        'b64thumbnail': _('Preview'),
     }
 
 
@@ -1745,7 +1751,7 @@ class Superset(BaseSupersetView):
         md = dashboard.params_dict
         dashboard.css = data.get('css')
         dashboard.dashboard_title = data['dashboard_title']
-
+        
         if 'filter_immune_slices' not in md:
             md['filter_immune_slices'] = []
         if 'timed_refresh_immune_slices' not in md:
@@ -1766,6 +1772,8 @@ class Superset(BaseSupersetView):
         if data.get('label_colors'):
             md['label_colors'] = data.get('label_colors')
         dashboard.json_metadata = json.dumps(md)
+        if data.get('b64thumbnail'):
+            dashboard.b64thumbnail = data['b64thumbnail']
 
     @api
     @has_access_api

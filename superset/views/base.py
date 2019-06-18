@@ -169,10 +169,16 @@ class BaseSupersetView(BaseView):
 class SupersetListWidget(ListWidget):
     template = 'superset/fab_overrides/list.html'
 
+class SupersetGridListWidget(ListWidget):
+    template = 'superset/fab_overrides/grid_list.html'
+
 
 class SupersetModelView(ModelView):
     page_size = 100
     list_widget = SupersetListWidget
+
+class SupersetModelGridView(SupersetModelView):
+    list_widget = SupersetGridListWidget
 
 
 class ListWidgetWithCheckboxes(ListWidget):

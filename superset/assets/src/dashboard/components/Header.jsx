@@ -43,6 +43,8 @@ import {
   LOG_ACTIONS_TOGGLE_EDIT_DASHBOARD,
 } from '../../logger/LogUtils';
 
+import {downloadDashboardImage} from '../components/ImageExport';
+
 const propTypes = {
   addSuccessToast: PropTypes.func.isRequired,
   addDangerToast: PropTypes.func.isRequired,
@@ -250,8 +252,15 @@ class Header extends React.PureComponent {
       if (positionJSONLength >= limit * 0.9) {
         this.props.addWarningToast('Your dashboard is near the size limit.');
       }
-
-      this.props.onSave(data, dashboardInfo.id, SAVE_TYPE_OVERWRITE);
+      let _onsave = function(withToast){ return this.props.onSave(data, dashboardInfo.id, SAVE_TYPE_OVERWRITE, withToast)}
+                      .bind(this);
+      let saveThumbnail = function(){
+        let target = $('#app .dashboard')[0];
+        downloadDashboardImage(target, false)
+          .then(dataUrl => data.b64thumbnail = dataUrl)
+          .then(() => _onsave(true)); // There's should be a better way to just update one field
+      }.bind(this);
+      _onsave(false).then(saveThumbnail);
     }
   }
 

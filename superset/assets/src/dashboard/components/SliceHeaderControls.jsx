@@ -23,7 +23,7 @@ import { Dropdown, MenuItem } from 'react-bootstrap';
 import { t } from '@superset-ui/translation';
 import URLShortLinkModal from '../../components/URLShortLinkModal';
 import getDashboardUrl from '../util/getDashboardUrl';
-import domtoimage from 'dom-to-image';
+import {downloadChartImage} from '../components/ImageExport';
 
 const propTypes = {
   slice: PropTypes.object.isRequired,
@@ -101,33 +101,8 @@ class SliceHeaderControls extends React.PureComponent {
       showControls: !this.state.showControls,
     });
   }
-
-  downloadChartImage(ev){
-    //debugger;
-    var jtarget = $(ev.currentTarget)
-                .parents('.dashboard-component-chart-holder');
-    window.setTimeout(() => {
-      // fix transparent backgrounds
-    var bgc = jtarget.css('background-color');
-    var bgcs = [bgc].concat(
-                  jtarget.parents().map((i, el) => $(el).css('background-color')).toArray()
-                )
-                .filter(c => c !== "rgba(0, 0, 0, 0)");    
-    var node = jtarget.css('background-color', bgcs[0]||bgc);
-    var title = jtarget.find('.editable-title input').val();
-    
-      domtoimage.toJpeg(node[0], { quality: 0.95 })
-        .then(function (dataUrl) {
-            var link = document.createElement('a');
-            link.download = title + '.jpeg';
-            link.href = dataUrl;
-            link.click();
-        })
-        .finally(function(){
-          node.css('background-color', bgc);
-        });
-      },
-      1000);
+  downloadAsImage(ev){
+    downloadChartImage(ev.currentTarget);
   }
 
   render() {
@@ -199,7 +174,7 @@ class SliceHeaderControls extends React.PureComponent {
             title={t('Share chart')}
             triggerNode={<span>{t('Share chart')}</span>}
           />
-          <MenuItem onClick={this.downloadChartImage}>
+          <MenuItem onClick={this.downloadAsImage}>
             {t('Download as image')}
           </MenuItem>
         </Dropdown.Menu>
