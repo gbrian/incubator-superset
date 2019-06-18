@@ -1,47 +1,6 @@
 @import './less/cosmo/variables.less';
 
-.grid-list{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 350px);
-    grid-gap: 1rem;
-    justify-content: space-between;
-    align-content: flex-start;
-    list-style: none;
-    padding-inline-start: 0px;
-  }
-  .grid-list .card{
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    height: 300px;
-    margin-bottom: 11px;
-  }
-  .stretch {
-    width: 100%;
-    display: inline-block;
-    font-size: 0;
-    line-height: 0
-  }
-  .grid-list .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-  .grid-list .card .img{
-    border-radius: 5px 5px 0 0;
-    width: 100%;
-    height: 200px;
-    background-color: @gray-lighter;
-    background-position: center 10px;
-    background-size: 96%;
-    background-repeat: no-repeat;
-  }
-  .grid-list .card .details{
-    padding: 10px;  
-  }
-  .grid-list .card .details .title{
-    
-  }
-  .grid-list .card .details .title .fa{
-    margin-left: 10px;
-  }
-  .grid-list .card .details .summary{
-    
-  }
+.cards .card .image{
+  height: 150px;
+  overflow: hidden;
+}

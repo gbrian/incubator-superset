@@ -25,6 +25,7 @@ import { t } from '@superset-ui/translation';
 import withToasts from '../messageToasts/enhancers/withToasts';
 import Loading from '../components/Loading';
 import '../../stylesheets/reactable-pagination.css';
+import GridList from '../components/GridList';
 
 const propTypes = {
   search: PropTypes.string,
@@ -50,9 +51,21 @@ class DashboardTable extends React.PureComponent {
         this.props.addDangerToast(t('An error occurred while fethching Dashboards'));
       });
   }
-
+  recentDashboards(){
+    //return [{"img": 'https://react.semantic-ui.com/images/wireframe/white-image.png', body:(<div class="body"/>)}];
+    return this.state.dashboards.map(o => ({
+      "img": o.b64thumbnail,
+      "href": "/superset/dashboards/" + o.id + "/",
+      "header": o.dashboard_title,
+      "description":"Some fancy dashboard description here"
+    }));
+  }
   render() {
-    if (this.state.dashboards.length > 0) {
+    if(this.props.grid){
+      return (<GridList
+        collection={this.recentDashboards()}
+      />)
+    }else if (this.state.dashboards.length > 0) {
       return (
         <Table
           className="table"

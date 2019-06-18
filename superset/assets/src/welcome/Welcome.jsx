@@ -39,11 +39,30 @@ export default class Welcome extends React.PureComponent {
   onSearchChange(event) {
     this.setState({ search: event.target.value });
   }
+
   render() {
     return (
       <div className="container welcome">
         <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
-          <Tab eventKey={1} title={t('Dashboards')}>
+          <Tab eventKey={1} title={t('Recently Viewed')}>
+          <Panel>
+              <Row>
+                <Col>
+                  <FormControl
+                    type="text"
+                    bsSize="sm"
+                    style={{ marginTop: '25px' }}
+                    placeholder="Search"
+                    value={this.state.search}
+                    onChange={this.onSearchChange}
+                  />
+                </Col>
+              </Row>
+              <hr />
+              <DashboardTable search={this.state.search} grid={true}/>
+            </Panel>
+          </Tab>
+          <Tab eventKey={2} title={t('Dashboards')}>
             <Panel>
               <Row>
                 <Col md={8}><h2>{t('Dashboards')}</h2></Col>
@@ -60,15 +79,6 @@ export default class Welcome extends React.PureComponent {
               </Row>
               <hr />
               <DashboardTable search={this.state.search} />
-            </Panel>
-          </Tab>
-          <Tab eventKey={2} title={t('Recently Viewed')}>
-            <Panel>
-              <Row>
-                <Col md={8}><h2>{t('Recently Viewed')}</h2></Col>
-              </Row>
-              <hr />
-              <RecentActivity user={this.props.user} />
             </Panel>
           </Tab>
           <Tab eventKey={3} title={t('Favorites')}>
