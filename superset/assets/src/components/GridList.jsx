@@ -37,7 +37,7 @@ export default class GridList extends React.Component {
                     description={e.description}
                     image={this.getImage(e)}
                     key={i}
-                    color={this.pickColor()} 
+                    color={this.pickColor(i)} 
                 />)
             )}
             </Card.Group>
