@@ -18,4 +18,4 @@
  */
 import '../stylesheets/react-select/select.less';
 import '../stylesheets/superset.less';
-import '../stylesheets/grid_list.less';
+import '../stylesheets/less/gridlist.less';

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Icon, Image } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import '../../stylesheets/less/gridlist.less';
 
 const src = 'https://react.semantic-ui.com/images/wireframe/white-image.png'
 
@@ -11,18 +12,19 @@ const propTypes = {
   isStarred: PropTypes.bool.isRequired,*/
 };
 
-const palette = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet',
-                    'purple', 'pink', 'brown', 'grey'];
-const paletteLen = palette.length;
+
+const paletteLen = 5; // Same as .median-cut-X { ... } entries at gridlist.less
 
 export default class GridList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
-    pickColor(ix){
-        ix = ix >= paletteLen ? ix - (paletteLen * Math.floor(ix/paletteLen)) : ix;
-        return palette[ix];
+    pickColorClass(ix){
+        if(ix >= paletteLen){
+            ix = ix - (paletteLen * Math.floor(ix/paletteLen));
+        }
+        return 'median-cut-' + ix;
     }
     getImage(e){
         return e.img || '/static/assets/images/noimage.png';
@@ -37,7 +39,7 @@ export default class GridList extends React.Component {
                     description={e.description}
                     image={this.getImage(e)}
                     key={i}
-                    color={this.pickColor(i)} 
+                    className={this.pickColorClass(i)}
                 />)
             )}
             </Card.Group>
