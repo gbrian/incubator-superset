@@ -12,6 +12,16 @@ const propTypes = {
   isStarred: PropTypes.bool.isRequired,*/
 };
 
+export function pickColorClass(ix){
+    if(ix >= paletteLen){
+        ix = ix - (paletteLen * Math.floor(ix/paletteLen));
+    }
+    return 'median-cut-' + ix;
+}
+
+export function getImage(url){
+    return url || '/static/assets/images/noimage.png';
+}
 
 const paletteLen = 5; // Same as .median-cut-X { ... } entries at gridlist.less
 
@@ -20,26 +30,20 @@ export default class GridList extends React.Component {
         super(props);
         this.state = {};
     }
-    pickColorClass(ix){
-        if(ix >= paletteLen){
-            ix = ix - (paletteLen * Math.floor(ix/paletteLen));
-        }
-        return 'median-cut-' + ix;
-    }
-    getImage(e){
-        return e.img || '/static/assets/images/noimage.png';
-    }
+    
     render() {
         return (
             <Card.Group itemsPerRow={4}>
              {this.props.collection.map((e, i) => 
+                e.card || 
                 (<Card 
                     href={e.href}
                     header={e.header}
                     description={e.description}
-                    image={this.getImage(e)}
+                    image={getImage(e.url)}
                     key={i}
-                    className={this.pickColorClass(i)}
+                    className={pickColorClass(i)}
+                    meta={e.meta}
                 />)
             )}
             </Card.Group>

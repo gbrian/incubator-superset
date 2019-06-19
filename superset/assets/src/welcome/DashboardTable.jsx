@@ -25,7 +25,8 @@ import { t } from '@superset-ui/translation';
 import withToasts from '../messageToasts/enhancers/withToasts';
 import Loading from '../components/Loading';
 import '../../stylesheets/reactable-pagination.css';
-import GridList from '../components/GridList';
+import GridList, {pickColorClass, getImage } from '../components/GridList';
+import { Card, Image, Icon } from 'semantic-ui-react';
 
 const propTypes = {
   search: PropTypes.string,
@@ -51,52 +52,89 @@ class DashboardTable extends React.PureComponent {
         this.props.addDangerToast(t('An error occurred while fethching Dashboards'));
       });
   }
+
+  dashboardMeta(o){
+    o.user = o.changed_by_name|| "";
+    o.chageddate = o.changed_on.split("T")[0];
+    return t('By: {{user}} \nModified: {{chageddate}}')
+            .replace(/(\{\{([^\}]+)\}\})/mg, (m, m1, m2) => o[m2]);
+  }
+
+  extra(o){
+    var entries = [(
+      <span key={o.changed_on}><Icon name='calendar'/>
+      {o.changed_on.split("T")[0]}</span>
+    )]
+    
+    return (<Card.Content extra>{entries}</Card.Content>);
+  }
+
   recentDashboards(){
-    //return [{"img": 'https://react.semantic-ui.com/images/wireframe/white-image.png', body:(<div class="body"/>)}];
-    return this.state.dashboards.map(o => ({
-      "img": o.b64thumbnail,
-      "href": "/superset/dashboards/" + o.id + "/",
-      "header": o.dashboard_title,
-      "description":"Some fancy dashboard description here"
+    return this.state.dashboards.map((o, i) => ({
+      "card": (<Card
+                href={o.url}
+                key={i}
+                className={pickColorClass(i)}
+              >
+              <Image src={getImage(o.b64thumbnail)} wrapped ui={false} />
+              <span key="a" className="gradient"/>
+              <Card.Content>
+                <Card.Header>{o.dashboard_title}</Card.Header>
+                <Card.Meta>
+                  <span className='date'>{o.changed_on.split("T")[0]}</span>
+                </Card.Meta>
+                <Card.Description>
+                  {o.description}
+                </Card.Description>
+              </Card.Content>
+              {this.extra(o)}
+            </Card>)
     }));
+  }
+
+  grid(){
+    return (<GridList
+      collection={this.recentDashboards()}
+    />);
+  }
+
+  table(){
+    return (
+      <Table
+        className="table"
+        sortable={['dashboard', 'creator', 'modified']}
+        filterBy={this.props.search}
+        filterable={['dashboard', 'creator']}
+        itemsPerPage={50}
+        hideFilterInput
+        columns={[
+          { key: 'dashboard', label: 'Dashboard' },
+          { key: 'creator', label: 'Creator' },
+          { key: 'modified', label: 'Modified' },
+        ]}
+        defaultSort={{ column: 'modified', direction: 'desc' }}
+      >
+        {this.state.dashboards.map(o => (
+          <Tr key={o.id}>
+            <Td column="dashboard" value={o.dashboard_title}>
+              <a href={o.url}>{o.dashboard_title}</a>
+            </Td>
+            <Td column="creator" value={o.changed_by_name}>
+              {unsafe(o.creator)}
+            </Td>
+            <Td column="modified" value={o.changed_on} className="text-muted">
+              {unsafe(o.modified)}
+            </Td>
+          </Tr>))}
+      </Table>
+    );
   }
   render() {
     if(this.props.grid){
-      return (<GridList
-        collection={this.recentDashboards()}
-      />)
+      return this.grid()
     }else if (this.state.dashboards.length > 0) {
-      return (
-        <Table
-          className="table"
-          sortable={['dashboard', 'creator', 'modified']}
-          filterBy={this.props.search}
-          filterable={['dashboard', 'creator']}
-          itemsPerPage={50}
-          hideFilterInput
-          columns={[
-            { key: 'dashboard', label: 'Dashboard' },
-            { key: 'creator', label: 'Creator' },
-            { key: 'modified', label: 'Modified' },
-          ]}
-          defaultSort={{ column: 'modified', direction: 'desc' }}
-        >
-          {this.state.dashboards.map(o => (
-            <Tr key={o.id}>
-              <Td column="dashboard" value={o.dashboard_title}>
-                <a href={o.url}>{o.dashboard_title}</a>
-              </Td>
-              <Td column="creator" value={o.changed_by_name}>
-                {unsafe(o.creator)}
-              </Td>
-              <Td column="modified" value={o.changed_on} className="text-muted">
-                {unsafe(o.modified)}
-              </Td>
-            </Tr>))}
-        </Table>
-      );
+      return this.table();
     }
-
     return <Loading />;
   }
 }

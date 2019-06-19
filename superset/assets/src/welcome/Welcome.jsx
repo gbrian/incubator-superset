@@ -65,8 +65,7 @@ export default class Welcome extends React.PureComponent {
           <Tab eventKey={2} title={t('Dashboards')}>
             <Panel>
               <Row>
-                <Col md={8}><h2>{t('Dashboards')}</h2></Col>
-                <Col md={4}>
+                <Col>
                   <FormControl
                     type="text"
                     bsSize="sm"
@@ -78,7 +77,7 @@ export default class Welcome extends React.PureComponent {
                 </Col>
               </Row>
               <hr />
-              <DashboardTable search={this.state.search} />
+              <DashboardTable search={this.state.search} grid={true}/>
             </Panel>
           </Tab>
           <Tab eventKey={3} title={t('Favorites')}>

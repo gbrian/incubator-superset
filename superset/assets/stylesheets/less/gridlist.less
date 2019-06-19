@@ -1,27 +1,62 @@
 @import './cosmo/variables.less';
 
+.ui.cards>.card>.image{
+    padding: 0px;
+    background-color: @gray-lighter;
+}
+
 .cards .card .image {
     height: 150px;
     overflow: hidden;
 }
 
-a.ui.card.median-cut-0{
-    -webkit-box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-0, 0 1px 3px 0 #d4d4d5;
-    box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-0, 0 1px 3px 0 #d4d4d5;
+.cards .card{
+    position: relative;
 }
-a.ui.card.median-cut-1{
-    -webkit-box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-1, 0 1px 3px 0 #d4d4d5;
-    box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-1, 0 1px 3px 0 #d4d4d5;
+
+// gradient
+.cards .card .gradient{
+    height: 4px;
+    position: absolute;
+    top: 150px;
+    width: 100%;
+    left: 0px;
 }
-a.ui.card.median-cut-2{
-    -webkit-box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-2, 0 1px 3px 0 #d4d4d5;
-    box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-2, 0 1px 3px 0 #d4d4d5;
+.cards .card.median-cut-0 >.gradient{
+    background: linear-gradient(@median-cut-0, #ffffff);
 }
-a.ui.card.median-cut-3{
-    -webkit-box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-3, 0 1px 3px 0 #d4d4d5;
-    box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-3, 0 1px 3px 0 #d4d4d5;
+.cards .card.median-cut-1 .gradient{
+    background: linear-gradient(@median-cut-1, #ffffff);
 }
-a.ui.card.median-cut-4{
-    -webkit-box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-4, 0 1px 3px 0 #d4d4d5;
-    box-shadow: 0 0 0 1px #d4d4d5, 0 2px 0 0 @median-cut-4, 0 1px 3px 0 #d4d4d5;
+.cards .card.median-cut-2 .gradient{
+    background: linear-gradient(@median-cut-2, #ffffff);
 }
+.cards .card.median-cut-3 .gradient{
+    background: linear-gradient(@median-cut-3, #ffffff);
+}
+.cards .card.median-cut-4 .gradient{
+    background: linear-gradient(@median-cut-4, #ffffff);
+}
+
+// extra content
+@lighter-bgpercent: 0%;
+.cards .card .extra.content{
+    color: @gray-darker;
+}
+.cards .card.median-cut-0 .extra.content{
+    background-color: lighten(@median-cut-0, @lighter-bgpercent);
+}
+.cards .card.median-cut-1 .extra.content{
+    background-color: lighten(@median-cut-1, @lighter-bgpercent);
+}
+.cards .card.median-cut-2 .extra.content{
+    background-color: lighten(@median-cut-2, @lighter-bgpercent);
+}
+.cards .card.median-cut-3 .extra.content{
+    background-color: lighten(@median-cut-3, @lighter-bgpercent);
+}
+.cards .card.median-cut-4 .extra.content{
+    background-color: lighten(@median-cut-4, @lighter-bgpercent);
+}
+
+
