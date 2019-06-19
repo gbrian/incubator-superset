@@ -43,53 +43,28 @@ export default class Welcome extends React.PureComponent {
   render() {
     return (
       <div className="container welcome">
-        <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
-          <Tab eventKey={1} title={t('Recently Viewed')}>
-          <Panel>
-              <Row>
-                <Col>
-                  <FormControl
-                    type="text"
-                    bsSize="sm"
-                    style={{ marginTop: '25px' }}
-                    placeholder="Search"
-                    value={this.state.search}
-                    onChange={this.onSearchChange}
-                  />
-                </Col>
-              </Row>
-              <hr />
-              <DashboardTable search={this.state.search} grid={true}/>
-            </Panel>
-          </Tab>
-          <Tab eventKey={2} title={t('Dashboards')}>
-            <Panel>
-              <Row>
-                <Col>
-                  <FormControl
-                    type="text"
-                    bsSize="sm"
-                    style={{ marginTop: '25px' }}
-                    placeholder="Search"
-                    value={this.state.search}
-                    onChange={this.onSearchChange}
-                  />
-                </Col>
-              </Row>
-              <hr />
-              <DashboardTable search={this.state.search} grid={true}/>
-            </Panel>
-          </Tab>
-          <Tab eventKey={3} title={t('Favorites')}>
-            <Panel>
-              <Row>
-                <Col md={8}><h2>{t('Favorites')}</h2></Col>
-              </Row>
-              <hr />
-              <Favorites user={this.props.user} />
-            </Panel>
-          </Tab>
-        </Tabs>
+        <Row>
+          <Col md={3}>
+          <h2>
+            {t('Search dashboard ')}
+            </h2>
+          </Col>
+          <Col md={9}>
+            <FormControl
+                type="text"
+                bsSize="sm"
+                placeholder="Search"
+                value={this.state.search}
+                onChange={this.onSearchChange}
+              />
+          </Col>
+        </Row>
+        <Row
+          className="welcomeResults">
+          <Col md={12}>
+            <DashboardTable search={this.state.search} grid={true}/>
+          </Col>
+        </Row>
       </div>
     );
   }

@@ -38,12 +38,22 @@ class DashboardTable extends React.PureComponent {
     super(props);
     this.state = {
       dashboards: [],
+      lastSearch: null
     };
   }
 
-  componentDidMount() {
+  refresh(){
+    var url = '/dashboardasync/api/read?' +
+              '_oc_DashboardModelViewAsync=changed_on' +
+              '&_od_DashboardModelViewAsync=desc';
+    if(this.props.search){
+      url+= '&_flt_0_dashboard_title=' + this.props.search;
+    }else{
+      // Top X
+      url += '&_psize_DashboardModelViewAsync=5';
+    }
     SupersetClient.get({
-      endpoint: '/dashboardasync/api/read?_oc_DashboardModelViewAsync=changed_on&_od_DashboardModelViewAsync=desc',
+      endpoint: url,
     })
       .then(({ json }) => {
          this.setState({ dashboards: json.result });
@@ -51,6 +61,18 @@ class DashboardTable extends React.PureComponent {
       .catch(() => {
         this.props.addDangerToast(t('An error occurred while fethching Dashboards'));
       });
+  }
+
+  componentDidMount() {
+    this.refresh();
+  }
+
+  componentDidUpdate() {
+    var lastSearch = this.state.lastSearch;
+    this.state.lastSearch = this.props.search;
+    if(this.props.search != lastSearch){
+      this.refresh();
+    }
   }
 
   dashboardMeta(o){
@@ -69,12 +91,30 @@ class DashboardTable extends React.PureComponent {
     return (<Card.Content extra>{entries}</Card.Content>);
   }
 
+  asFavourites(results){
+    return [{image:'https://www.shareicon.net/download/2015/09/26/107800_star.svg',
+            header:t('Favourites'),
+            meta:t('Last viewed dashboard'),
+            description:t('Use seach field to find more dashboards'),
+            className:pickColorClass(0),
+          }].concat(results)
+  } 
+
+  asResults(results){
+    return [{image:'https://cdn1.iconfinder.com/data/icons/seo-part-1-1/128/Optimization-Seo-Search-Engine-Results-Graph-Monitor-512.png',
+            header:t('Results'),
+            meta:t('Dashboard found'),
+            description:t('Refine search to find your dashboards'),
+            className:pickColorClass(0),
+          }].concat(results)
+  } 
+
   recentDashboards(){
-    return this.state.dashboards.map((o, i) => ({
+    var dashboardsCards = this.state.dashboards.map((o, i) => ({
       "card": (<Card
                 href={o.url}
-                key={i}
-                className={pickColorClass(i)}
+                key={i+1}
+                className={pickColorClass(i+1)}
               >
               <Image src={getImage(o.b64thumbnail)} wrapped ui={false} />
               <span key="a" className="gradient"/>
@@ -90,6 +130,10 @@ class DashboardTable extends React.PureComponent {
               {this.extra(o)}
             </Card>)
     }));
+    if(this.props.search){
+      return this.asResults(dashboardsCards);
+    }
+    return this.asFavourites(dashboardsCards);
   }
 
   grid(){
@@ -130,6 +174,7 @@ class DashboardTable extends React.PureComponent {
     );
   }
   render() {
+    console.log("Table refresh... search " + this.props.search)
     if(this.props.grid){
       return this.grid()
     }else if (this.state.dashboards.length > 0) {

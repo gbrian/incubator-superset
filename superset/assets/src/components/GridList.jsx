@@ -19,8 +19,8 @@ export function pickColorClass(ix){
     return 'median-cut-' + ix;
 }
 
-export function getImage(url){
-    return url || '/static/assets/images/noimage.png';
+export function getImage(image){
+    return image || '/static/assets/images/noimage.png';
 }
 
 const paletteLen = 5; // Same as .median-cut-X { ... } entries at gridlist.less
@@ -40,7 +40,7 @@ export default class GridList extends React.Component {
                     href={e.href}
                     header={e.header}
                     description={e.description}
-                    image={getImage(e.url)}
+                    image={getImage(e.image)}
                     key={i}
                     className={pickColorClass(i)}
                     meta={e.meta}
