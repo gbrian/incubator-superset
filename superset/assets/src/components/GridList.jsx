@@ -1,7 +1,5 @@
 import React from 'react'
 import { Card, Icon, Image } from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
-import '../../stylesheets/less/gridlist.less';
 
 const src = 'https://react.semantic-ui.com/images/wireframe/white-image.png'
 

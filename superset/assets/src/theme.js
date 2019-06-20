@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import 'semantic-ui-css/semantic.min.css'; //  "body" definition inside!! :(
 import '../stylesheets/react-select/select.less';
 import '../stylesheets/superset.less';
 import '../stylesheets/less/gridlist.less';
